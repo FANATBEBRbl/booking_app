@@ -13,6 +13,14 @@ app.use(cors());
 // Подключение к MongoDB
 mongoose.connect("mongodb://localhost:27017/booking-app");
 
+// Логирование статуса подключения к MongoDB
+mongoose.connection.on('error', err => {
+  console.error('Ошибка подключения к MongoDB:', err.message);
+});
+mongoose.connection.once('open', () => {
+  console.log('Успешное подключение к MongoDB');
+});
+
 // Установка кодировки для mongoose
 mongoose.set('toJSON', { virtuals: true });
 
@@ -145,10 +153,10 @@ app.post("/api/bookings", async (req, res) => {
   res.status(201).send("Booking created");
 });
 
-// Раздача статики React (build)
-app.use(express.static(path.join(__dirname, '../client/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// Раздача статики React (build) — только после всех API-роутов!
+app.use(express.static(path.resolve(__dirname, '../client/build')));
+app.get(/^\/((?!api\/).)*$/, (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 // Запуск сервера на всех интерфейсах
