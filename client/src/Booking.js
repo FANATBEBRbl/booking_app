@@ -65,7 +65,7 @@ function AdminRoomForm({ onRoomAdded }) {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('http://localhost:5000/api/rooms', form, {
+      await axios.post('/api/rooms', form, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setOpen(false);
@@ -109,12 +109,12 @@ export default function Booking() {
   const [currentDate, setCurrentDate] = useState(new Date()); // добавлено состояние даты
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/rooms").then((res) => setRooms(res.data));
+    axios.get("/api/rooms").then((res) => setRooms(res.data));
   }, []);
 
   useEffect(() => {
     if (selectedRoom) {
-      axios.get(`http://localhost:5000/api/bookings?roomId=${selectedRoom}`)
+      axios.get(`/api/bookings?roomId=${selectedRoom}`)
         .then(res => {
           setEvents(res.data.map(b => ({
             id: b._id,
@@ -159,7 +159,7 @@ export default function Booking() {
     }
     if (!window.confirm('Удалить бронь?')) return;
     try {
-      const res = await axios.delete(`http://localhost:5000/api/bookings/${event.id}`, {
+      const res = await axios.delete(`/api/bookings/${event.id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       console.log('Ответ сервера на удаление:', res);
@@ -184,7 +184,7 @@ export default function Booking() {
       return;
     }
     try {
-      await axios.post('http://localhost:5000/api/bookings', {
+      await axios.post('/api/bookings', {
         userId: localStorage.getItem('userId'),
         roomId: selectedRoom,
         ...form,

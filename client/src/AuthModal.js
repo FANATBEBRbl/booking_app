@@ -37,10 +37,10 @@ export default function AuthModal({ open, onClose, onAuth }) {
     setError('');
     try {
       if (isRegister) {
-        await axios.post('http://localhost:5000/api/auth/register', form);
+        await axios.post('/api/auth/register', form);
         setIsRegister(false);
       } else {
-        const res = await axios.post('http://localhost:5000/api/auth/login', form);
+        const res = await axios.post('/api/auth/login', form);
         localStorage.setItem('token', res.data.token);
         const payload = JSON.parse(atob(res.data.token.split('.')[1]));
         localStorage.setItem('userId', payload.userId);
